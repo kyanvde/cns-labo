@@ -1,0 +1,5 @@
+Known plaintext:
+STATUS: SERVER ONLINE
+
+Ciphertext:
+22135cc0b9daa9e717f98a998e6ee5e92655e1a88f
