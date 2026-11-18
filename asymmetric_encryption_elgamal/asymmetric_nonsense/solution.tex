@@ -1,0 +1,36 @@
+\documentclass[../../report.tex]{subfiles}
+
+\begin{document}
+
+\section{Asymmetric Nonsense}
+
+\challenge{The crypto people always with their nonce's, why does it matter so much.}
+
+We are given an ElGamal public key $(p, g, y)$, a known plaintext $m$ with its
+ciphertext $(c_1, c_2)$, and the encrypted flag $(\tilde{c}_1, \tilde{c}_2)$.
+
+Both ciphertexts have the same first component, $c_1 = \tilde{c}_1$. Since
+$c_1 = g^k \bmod p$, both messages were encrypted with the same nonce $k$, and
+therefore with the same shared secret $s = y^k \bmod p$:
+\begin{align*}
+  c_2         &= m \cdot s \bmod p, \\
+  \tilde{c}_2 &= f \cdot s \bmod p.
+\end{align*}
+
+Because we know $m$ (as a big-endian integer of its bytes), we can recover the
+shared secret from the first ciphertext:
+\[
+  s = c_2 \cdot m^{-1} \bmod p.
+\]
+
+With the shared secret, the flag $f$ follows from the second ciphertext:
+\[
+  f = \tilde{c}_2 \cdot s^{-1} \bmod p.
+\]
+
+\subsection*{Solution script}
+\lstinputlisting{\subfix{solve.py}}
+
+\flag{cns\{elgamal\_nonce\_reuse\}}
+
+\end{document}

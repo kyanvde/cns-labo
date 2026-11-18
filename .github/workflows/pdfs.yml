@@ -1,0 +1,36 @@
+name: Build PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.tex'
+      - '**/solve.py'
+      - 'Makefile'
+      - '.github/workflows/pdfs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build PDFs
+        run: docker run --rm -v "$PWD":/work -w /work texlive/texlive:latest make
+
+      - name: Collect PDFs
+        run: |
+          mkdir -p out
+          find . -name '*.pdf' -not -path './out/*' -not -path './.*' -exec cp --parents {} out/ \;
+
+      - name: Publish to pdfs branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: pdfs
+          publish_dir: ./out
+          force_orphan: true
